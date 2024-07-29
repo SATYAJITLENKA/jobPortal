@@ -4,6 +4,9 @@ import cors from "cors";
 import dbConnect from "./DB/dbConnection.js";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/user.route.js"
+import compnyRoute from "./routes/company.route.js"
+import jobRouter from "./routes/job.route.js"
+import applicationRouter from "./routes/application.route.js"
 
 dotenv.config({});
 
@@ -24,6 +27,9 @@ const port = process.env.PORT || 3000;
 
 //api's
 app.use("/api/user",userRoute)
+app.use("/api/company",compnyRoute)
+app.use("/api/job",jobRouter)
+app.use("/api/application",applicationRouter)
 
 app.listen(port, () => {
   dbConnect();

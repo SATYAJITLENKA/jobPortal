@@ -8,7 +8,6 @@ const companySchema=new mongoose.Schema({
     },
     describtion:{
         type:String,
-        required:true,
     },
     website:{
         type:String,

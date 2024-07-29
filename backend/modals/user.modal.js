@@ -28,7 +28,7 @@ const userSchema=new mongoose.Schema({
         skills:[{type:String}],
         resume:{type:String},
         resumeOriginalName:{type:String},
-        company:{type:mongoose.Schema.Types.ObjectId ,ref:'company'},
+        company:{type:mongoose.Schema.Types.ObjectId ,ref:'Company'},
         profilePhoto:{
             type:String,
             default:'   '
@@ -36,4 +36,4 @@ const userSchema=new mongoose.Schema({
     }
 },{timestamps:true})
 
-export const User=mongoose.model('user',userSchema)
+export const User=mongoose.model('User',userSchema)
