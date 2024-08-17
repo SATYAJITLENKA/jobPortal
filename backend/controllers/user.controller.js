@@ -1,17 +1,23 @@
 import { User } from "../modals/user.modal.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import getDataUri from "../utils/datauri.js";
+import cloudinary from "../utils/cloudinary.js"
 
 export const register = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, password, role } = req.body;
+    console.log(req.body)
     if (!fullname || !email || !phoneNumber || !password || !role) {
       return res.status(400).json({
         message: "Something is missing",
         success: false,
       });
     }
-    // let user = User.findOne({ email });
+    const file=req.file;
+    const fileuri=getDataUri(file);
+    const cloudResponse =await cloudinary.uploader.upload(fileuri.content)
+
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({
@@ -26,17 +32,18 @@ export const register = async (req, res) => {
       phoneNumber,
       password: hashPassword,
       role,
+      profile:{
+        profilePhoto:cloudResponse.secure_url,
+      }
     });
     return res.status(200).json({
       message: "Account Created Succesfully",
       success: true,
+     
     });
   } catch (error) {
-    return res.status(500).json({
-      message: "Something went wrong",
-      success: false,
-    });
-    console.log(error);
+    console.log(error)
+   
   }
 };
 
@@ -98,7 +105,8 @@ export const login = async (req, res) => {
 export const logout=async(req, res)=>{
    try {
      return res.status(200).cookie("token", "" ,{maxAge:0}).json({
-      message:"Logged Out successfuly"
+      message:"Logged Out successfuly",
+      success:true
      })
    } catch (error) {
     console.log(error)
@@ -110,13 +118,7 @@ export const updateProfile=async(req,res)=>{
   try {
     const {fullname ,email , phoneNumber , skills , bio} =req.body;
     const file =req.file;
-  //   if(!fullname || !email || !phoneNumber || !skills || !bio){
-  //     return res.status(400).json({
-  //       message:"user is not found",
-  //       success:false
-  //   })
-  // }
-
+    
   //setup the cloudnary
   let skillArray;
   if(skills){
